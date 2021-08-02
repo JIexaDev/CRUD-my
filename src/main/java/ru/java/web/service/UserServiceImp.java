@@ -5,8 +5,10 @@ import ru.java.web.dao.UserDao;
 import ru.java.web.dao.UserDaoImp;
 import ru.java.web.models.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 @Component
 public class UserServiceImp implements UserService{
 

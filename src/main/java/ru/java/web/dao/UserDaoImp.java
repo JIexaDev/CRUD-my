@@ -6,24 +6,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.java.web.models.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-@Component
 public class UserDaoImp implements UserDao{
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<User> index() {
-        return sessionFactory.getCurrentSession().createQuery("from User").getResultList();
+        return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
     public User show(int id) {
-        return sessionFactory.getCurrentSession()
+        return entityManager
                 .createQuery("select u from User u where u.id=:id", User.class)
                 .setParameter("id", id)
                 .getResultList()
@@ -32,7 +32,7 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void save(User user) {
-        sessionFactory.getCurrentSession().save(user);
+        entityManager.persist(user);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void delete(int id) {
-        sessionFactory.getCurrentSession().createQuery("delete from User where id =" + id).executeUpdate();
+        entityManager.createQuery("delete from User where id =" + id).executeUpdate();
     }
 }
