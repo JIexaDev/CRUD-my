@@ -1,11 +1,13 @@
 package ru.java.web.service;
 
+import org.springframework.stereotype.Component;
 import ru.java.web.dao.UserDao;
 import ru.java.web.dao.UserDaoImp;
 import ru.java.web.models.User;
 
 import java.util.List;
 
+@Component
 public class UserServiceImp implements UserService{
 
     UserDao userDao = new UserDaoImp();
