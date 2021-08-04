@@ -21,7 +21,6 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScan(value = "ru.java.web")
 public class HiberConfig {
 
     private final Environment env;
