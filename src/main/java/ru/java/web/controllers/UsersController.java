@@ -1,5 +1,6 @@
 package ru.java.web.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ public class UsersController {
 
     private final UserServiceImp userServiceImp;
 
+    @Autowired
     public UsersController(UserServiceImp userServiceImp) {
         this.userServiceImp = userServiceImp;
     }
