@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
 </head>
 <body>
 
-<div th:each="user : ${users}">
-    <a th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getFirstName()}">user</a>
-</div>
+<table th:border="1">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th colspan="2">Action</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getName()}">name</td>
+        <td th:text="${user.getSurname()}">surname</td>
+        <td th:text="${user.getAge()}">age</td>
+        <td th:text="${user.getEmail()}">email</td>
+        <td><a th:href="@{/users/{id}/edit(id=${user.getId()})}">Edit</a></td>
+        <td><a th:href="@{/users/{id}(id=${user.getId()})}">Show Information</a></td>
+    </tr>
+</table>
+<br>
 
-<br/>
-<hr/>
-
-<a href="/users/new">Create new person</a>
+<form th:method="get" th:action="@{/users/new}">
+    <input type="submit" value="New User">
+</form>
 
 </body>
 </html>

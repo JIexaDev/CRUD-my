@@ -3,61 +3,69 @@ package ru.java.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.java.web.models.User;
-import ru.java.web.service.UserServiceImp;
+import ru.java.web.service.UserService;
 
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
 public class UsersController {
-
-    private final UserServiceImp userServiceImp;
+    final UserService service;
 
     @Autowired
-    public UsersController(UserServiceImp userServiceImp) {
-        this.userServiceImp = userServiceImp;
+    public UsersController(UserService service) {
+        this.service = service;
     }
 
-    @GetMapping
-    public String index(Model model) {
-        model.addAttribute("users", userServiceImp.index());
-        return "users/index";
+    @GetMapping()
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", service.getAllUsers());
+        return "index";
     }
 
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("user", userServiceImp.show(id));
-        return "users/show";
+    @GetMapping("{id}")
+    public String findById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", service.findById(id));
+        return "show";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        return "users/new";
+    @GetMapping("new")
+    public String newUser(@ModelAttribute("user") User user) {
+        return "new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("user") User user) {
-        userServiceImp.save(user);
+    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "new";
+        }
+
+        service.save(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userServiceImp.show(id));
-        return "users/edit";
+    @GetMapping("{id}/edit")
+    public String editUser(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", service.findById(id));
+        return "edit";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
-        userServiceImp.update(id, user);
+    @PatchMapping("{id}")
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "edit";
+        }
+
+        service.save(user);
         return "redirect:/users";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id) {
-        userServiceImp.delete(id);
+    @DeleteMapping("{id}")
+    public String delete(@PathVariable("id") Long id) {
+        service.delete(id);
         return "redirect:/users";
     }
 }
